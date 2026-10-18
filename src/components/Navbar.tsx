@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { Menu, X, PieChart, Users, BarChart3, Compass, Lightbulb, ChevronRight, FileText, Download } from 'lucide-react';
+import { Menu, X, PieChart, Users, BarChart3, Compass, Lightbulb, ChevronRight, FileText, Download, Loader2 } from 'lucide-react';
 
 export type SectionKey = 'resumen' | 'competidores' | 'scoring' | 'cuadrante' | 'recomendaciones' | 'todos';
 
 interface NavbarProps {
   onDownloadPdf: () => void;
+  isGeneratingPdf?: boolean;
   activeSection: SectionKey;
   onSelectSection: (section: SectionKey) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   onDownloadPdf,
+  isGeneratingPdf = false,
   activeSection,
   onSelectSection,
 }) => {
@@ -113,12 +115,22 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* PDF Export Button (Desktop & Mobile) */}
             <button
               onClick={handlePdfClick}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs font-medium tracking-wider text-amber-300 bg-neutral-900 border border-amber-500/40 hover:bg-neutral-800 hover:border-amber-400 rounded transition-all active:scale-95 whitespace-nowrap min-h-[38px]"
+              disabled={isGeneratingPdf}
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs font-medium tracking-wider text-amber-300 bg-neutral-900 border border-amber-500/40 hover:bg-neutral-800 hover:border-amber-400 rounded transition-all active:scale-95 whitespace-nowrap min-h-[38px] disabled:opacity-60"
               title="Descargar informe completo en PDF"
             >
-              <Download className="w-3.5 h-3.5 text-amber-400" />
-              <span className="hidden xs:inline">Descargar</span>
-              <span>PDF</span>
+              {isGeneratingPdf ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 text-amber-400 animate-spin" />
+                  <span>Generando...</span>
+                </>
+              ) : (
+                <>
+                  <Download className="w-3.5 h-3.5 text-amber-400" />
+                  <span className="hidden xs:inline">Descargar</span>
+                  <span>PDF</span>
+                </>
+              )}
             </button>
 
             {/* Mobile Three-Lines Hamburger Menu Button */}
@@ -185,14 +197,24 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span className="text-[9px] bg-amber-400 text-black font-bold px-1.5 py-0.5 rounded">PDF</span>
               </div>
               <p className="text-xs text-neutral-300 mb-2.5">
-                Genera un PDF con las 5 partes: Resumen, Landscape, Scoring, Cuadrante y Recomendaciones.
+                Genera y descarga directamente un archivo PDF con las 5 partes completas del estudio.
               </p>
               <button
                 onClick={handlePdfClick}
-                className="w-full py-2.5 px-3 rounded-lg text-xs font-bold uppercase tracking-wider text-black bg-gradient-to-r from-amber-300 to-amber-500 hover:from-amber-200 hover:to-amber-400 flex items-center justify-center gap-2 shadow-md shadow-amber-500/20 active:scale-95"
+                disabled={isGeneratingPdf}
+                className="w-full py-2.5 px-3 rounded-lg text-xs font-bold uppercase tracking-wider text-black bg-gradient-to-r from-amber-300 to-amber-500 hover:from-amber-200 hover:to-amber-400 flex items-center justify-center gap-2 shadow-md shadow-amber-500/20 active:scale-95 disabled:opacity-60"
               >
-                <Download className="w-4 h-4 text-black" />
-                <span>Descargar PDF Completo</span>
+                {isGeneratingPdf ? (
+                  <>
+                    <Loader2 className="w-4 h-4 text-black animate-spin" />
+                    <span>Generando PDF...</span>
+                  </>
+                ) : (
+                  <>
+                    <Download className="w-4 h-4 text-black" />
+                    <span>Descargar PDF Completo</span>
+                  </>
+                )}
               </button>
             </div>
 

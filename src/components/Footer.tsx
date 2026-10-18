@@ -1,11 +1,12 @@
 import React from 'react';
-import { ArrowUp, Award, Download } from 'lucide-react';
+import { ArrowUp, Award, Download, Loader2 } from 'lucide-react';
 
 interface FooterProps {
   onDownloadPdf?: () => void;
+  isGeneratingPdf?: boolean;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onDownloadPdf }) => {
+export const Footer: React.FC<FooterProps> = ({ onDownloadPdf, isGeneratingPdf = false }) => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -29,10 +30,20 @@ export const Footer: React.FC<FooterProps> = ({ onDownloadPdf }) => {
             {onDownloadPdf && (
               <button
                 onClick={onDownloadPdf}
-                className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-amber-300 bg-neutral-900 border border-amber-500/30 hover:border-amber-400 hover:text-white rounded transition-colors min-h-[40px]"
+                disabled={isGeneratingPdf}
+                className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-amber-300 bg-neutral-900 border border-amber-500/30 hover:border-amber-400 hover:text-white rounded transition-colors min-h-[40px] disabled:opacity-60"
               >
-                <Download className="w-3.5 h-3.5 text-amber-400" />
-                <span>Descargar PDF</span>
+                {isGeneratingPdf ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 text-amber-400 animate-spin" />
+                    <span>Generando PDF...</span>
+                  </>
+                ) : (
+                  <>
+                    <Download className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Descargar PDF</span>
+                  </>
+                )}
               </button>
             )}
 

@@ -15,11 +15,13 @@ import { RecommendationsSection } from './components/RecommendationsSection';
 import { Footer } from './components/Footer';
 import { BrandDetailModal } from './components/BrandDetailModal';
 import { PrintReportView } from './components/PrintReportView';
-import { ArrowLeft, ArrowRight, ChevronRight, Download, FileText } from 'lucide-react';
+import { generateMarketStudyPdf } from './utils/generatePdf';
+import { ArrowLeft, ArrowRight, ChevronRight, Download, FileText, Loader2 } from 'lucide-react';
 
 export default function App() {
   const [brands] = useState<BrandData[]>(INITIAL_BRANDS);
   const [selectedBrand, setSelectedBrand] = useState<BrandData | null>(null);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   
   // Default to 'resumen' so ONLY the Executive Summary is in the main view
   const [activeSection, setActiveSection] = useState<SectionKey>('resumen');
@@ -38,8 +40,21 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleDownloadPdf = () => {
-    window.print();
+  const handleDownloadPdf = async () => {
+    if (isGeneratingPdf) return;
+    try {
+      setIsGeneratingPdf(true);
+      await generateMarketStudyPdf();
+    } catch (err) {
+      console.warn('Fallback a impresión nativa:', err);
+      try {
+        window.print();
+      } catch (printErr) {
+        console.error('Error al imprimir:', printErr);
+      }
+    } finally {
+      setIsGeneratingPdf(false);
+    }
   };
 
   const getSectionTitle = (key: SectionKey) => {
@@ -69,6 +84,7 @@ export default function App() {
         {/* Top Bar with 3-Lines Mobile Hamburger Menu & PDF button */}
         <Navbar
           onDownloadPdf={handleDownloadPdf}
+          isGeneratingPdf={isGeneratingPdf}
           activeSection={activeSection}
           onSelectSection={handleSelectSection}
         />
@@ -192,10 +208,20 @@ export default function App() {
                       <div className="mt-4 pt-4 border-t border-neutral-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
                         <button
                           onClick={handleDownloadPdf}
-                          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-black bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 rounded hover:from-amber-200 hover:to-amber-400 transition-all shadow-md shadow-amber-500/20 active:scale-95 min-h-[42px]"
+                          disabled={isGeneratingPdf}
+                          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-black bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 rounded hover:from-amber-200 hover:to-amber-400 transition-all shadow-md shadow-amber-500/20 active:scale-95 min-h-[42px] disabled:opacity-60"
                         >
-                          <Download className="w-4 h-4 text-black" />
-                          <span>Descargar Todo el Estudio en PDF</span>
+                          {isGeneratingPdf ? (
+                            <>
+                              <Loader2 className="w-4 h-4 text-black animate-spin" />
+                              <span>Generando PDF...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Download className="w-4 h-4 text-black" />
+                              <span>Descargar Todo el Estudio en PDF</span>
+                            </>
+                          )}
                         </button>
 
                         <div className="flex items-center justify-end gap-3 text-xs">
@@ -327,7 +353,7 @@ export default function App() {
         </main>
 
         {/* Institutional Footer */}
-        <Footer onDownloadPdf={handleDownloadPdf} />
+        <Footer onDownloadPdf={handleDownloadPdf} isGeneratingPdf={isGeneratingPdf} />
 
         {/* Brand In-Depth Dossier Modal */}
         <BrandDetailModal
