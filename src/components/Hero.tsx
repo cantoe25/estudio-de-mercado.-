@@ -15,8 +15,8 @@ export const Hero: React.FC<HeroProps> = ({ onExploreGartner, onExploreScoring }
         aria-hidden="true"
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-        <div className="flex flex-col items-start max-w-4xl">
+      <div className="w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12 relative z-10">
+        <div className="flex flex-col items-start max-w-5xl 2xl:max-w-6xl">
           {/* Curatorial Header Lead */}
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs uppercase tracking-widest text-amber-400/90 font-medium mb-3">
             <span>INFORME DE ESTRATEGIA</span>

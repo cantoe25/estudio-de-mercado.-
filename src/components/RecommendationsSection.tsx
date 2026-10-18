@@ -5,7 +5,7 @@ import { CheckCircle2, AlertTriangle } from 'lucide-react';
 export const RecommendationsSection: React.FC = () => {
   return (
     <section id="recomendaciones" className="pt-10 sm:pt-14 pb-14 sm:pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
         {/* Section Header */}
         <div className="flex flex-col mb-6 sm:mb-8">
           <div className="flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-widest text-amber-400 font-medium mb-1">
@@ -26,8 +26,8 @@ export const RecommendationsSection: React.FC = () => {
           </div>
         </div>
 
-        {/* 8 Recommendations Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-5 mb-10 sm:mb-14">
+        {/* 8 Recommendations Grid (Scales from 1-col on mobile, 2-col on laptops, to 4-col on wide PC displays) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3.5 sm:gap-5 2xl:gap-6 mb-10 sm:mb-14">
           {STRATEGIC_RECOMMENDATIONS.map((rec) => (
             <div
               key={rec.id}

@@ -62,7 +62,7 @@ export const GartnerQuadrant: React.FC<GartnerQuadrantProps> = ({
 
   return (
     <section id="cuadrante" className="pt-10 sm:pt-14 pb-10 sm:pb-12 border-b border-amber-500/20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
         {/* Section Header */}
         <div className="flex flex-col mb-6 sm:mb-8">
           <div className="flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-widest text-amber-400 font-medium mb-1">
