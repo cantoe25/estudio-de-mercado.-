@@ -1,0 +1,6 @@
+{
+  "name": "Estudio de Mercado: Calzado de Lujo Panamá",
+  "description": "Estudio de mercado y análisis competitivo de calzado no deportivo y marcas de moda y lujo en Panamá en estética negro, dorado y blanco.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

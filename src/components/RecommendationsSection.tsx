@@ -1,0 +1,157 @@
+import React from 'react';
+import { STRATEGIC_RECOMMENDATIONS, RISKS_AND_MITIGATIONS } from '../data/marketData';
+import { CheckCircle2, AlertTriangle } from 'lucide-react';
+
+export const RecommendationsSection: React.FC = () => {
+  return (
+    <section id="recomendaciones" className="pt-10 sm:pt-14 pb-14 sm:pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Section Header */}
+        <div className="flex flex-col mb-6 sm:mb-8">
+          <div className="flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-widest text-amber-400 font-medium mb-1">
+            <span>SECCIÓN 05</span>
+            <span className="text-neutral-600" aria-hidden="true">/</span>
+            <span>PLAN DE ACCIÓN Y RIESGOS</span>
+          </div>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4">
+            <div>
+              <h2 className="text-xl sm:text-3xl font-serif font-bold text-white tracking-tight">
+                5. Recomendaciones Estratégicas
+              </h2>
+              <div className="w-14 sm:w-16 h-0.5 bg-gradient-to-r from-amber-400 to-transparent mt-2"></div>
+            </div>
+            <p className="text-xs text-neutral-400 max-w-md">
+              8 mandamientos de ejecución comercial para penetrar y liderar la brecha de calzado premium en Ciudad de Panamá.
+            </p>
+          </div>
+        </div>
+
+        {/* 8 Recommendations Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-5 mb-10 sm:mb-14">
+          {STRATEGIC_RECOMMENDATIONS.map((rec) => (
+            <div
+              key={rec.id}
+              className="bg-neutral-900/80 border border-neutral-800 hover:border-amber-500/40 rounded p-4 sm:p-6 transition-all duration-200 group flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-start justify-between gap-2 mb-2 sm:mb-3">
+                  <div className="flex items-baseline gap-2">
+                    <span className="font-serif text-2xl sm:text-3xl font-bold text-amber-400 tabular-nums">
+                      {String(rec.id).padStart(2, '0')}.
+                    </span>
+                    <h3 className="font-serif text-base sm:text-lg font-bold text-white group-hover:text-amber-200 transition-colors">
+                      {rec.title}
+                    </h3>
+                  </div>
+                  <span className="text-[9px] sm:text-[10px] tracking-wider uppercase font-semibold text-neutral-400 border border-neutral-700 px-2 py-0.5 rounded whitespace-nowrap">
+                    {rec.focusArea}
+                  </span>
+                </div>
+
+                {/* Acción */}
+                <div className="text-xs text-neutral-300 mb-3 leading-relaxed">
+                  <strong className="text-white block mb-0.5 uppercase tracking-wider text-[10px] sm:text-[11px] text-amber-300">
+                    Acción recomendada:
+                  </strong>
+                  {rec.action}
+                </div>
+              </div>
+
+              {/* Por qué */}
+              <div className="border-t border-neutral-800/80 pt-2.5 sm:pt-3 text-[11px] sm:text-xs text-neutral-400 leading-relaxed bg-neutral-950/40 p-2.5 rounded">
+                <strong className="text-neutral-200 font-medium">Por qué: </strong>
+                {rec.reason}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Subsection: Matriz de Riesgos y Mitigación */}
+        <div className="mt-8">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-lg sm:text-xl font-serif font-bold text-white flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
+                <span>Riesgos del Mercado Panameño y Mitigación</span>
+              </h3>
+              <p className="text-xs text-neutral-400 mt-1">
+                Estrategias preventivas contra barreras arancelarias, compras en Miami y gigantes del retail.
+              </p>
+            </div>
+          </div>
+
+          {/* 1. Mobile Risk Cards View (Fits 100% on phone screens with zero horizontal overflow) */}
+          <div className="space-y-3 md:hidden">
+            {RISKS_AND_MITIGATIONS.map((item, idx) => (
+              <div key={idx} className="bg-neutral-950/90 border border-neutral-800 rounded-lg p-3.5 shadow-md">
+                <div className="flex items-start justify-between gap-2 mb-2 pb-2 border-b border-neutral-900">
+                  <span className="text-[10px] uppercase font-semibold text-neutral-400">
+                    Riesgo #{idx + 1}
+                  </span>
+                  <span className={`inline-block text-[10px] font-semibold px-2 py-0.5 rounded border ${
+                    item.impactLevel === "Crítico"
+                      ? "bg-red-500/10 text-red-300 border-red-500/30"
+                      : "bg-amber-500/10 text-amber-300 border-amber-500/30"
+                  }`}>
+                    {item.impactLevel}
+                  </span>
+                </div>
+
+                <p className="text-xs font-medium text-white mb-3 leading-relaxed">
+                  {item.risk}
+                </p>
+
+                <div className="bg-neutral-900/80 p-2.5 rounded border border-neutral-800/80 flex items-start gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <div className="text-[11px] text-neutral-300 leading-relaxed">
+                    <strong className="text-amber-300 block mb-0.5 uppercase tracking-wider text-[10px]">
+                      Mitigación Operativa:
+                    </strong>
+                    {item.mitigation}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* 2. Desktop Full Table View (Active on md screens and above) */}
+          <div className="hidden md:block overflow-x-auto border border-neutral-800 rounded bg-neutral-950/60 shadow-xl">
+            <table className="w-full text-left text-xs border-collapse min-w-[680px]">
+              <thead>
+                <tr className="border-b border-neutral-800 bg-neutral-900/90 text-neutral-400 uppercase tracking-wider text-[11px]">
+                  <th className="py-3.5 px-5 w-1/3">Riesgo Detectado</th>
+                  <th className="py-3.5 px-5 w-1/2">Plan de Mitigación Operativa</th>
+                  <th className="py-3.5 px-5 text-center">Criticidad</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-neutral-800">
+                {RISKS_AND_MITIGATIONS.map((item, idx) => (
+                  <tr key={idx} className="hover:bg-neutral-900/50 transition-colors">
+                    <td className="py-4 px-5 font-medium text-white align-top leading-relaxed">
+                      {item.risk}
+                    </td>
+                    <td className="py-4 px-5 text-neutral-300 align-top leading-relaxed">
+                      <div className="flex items-start gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                        <span>{item.mitigation}</span>
+                      </div>
+                    </td>
+                    <td className="py-4 px-5 text-center align-top whitespace-nowrap">
+                      <span className={`inline-block text-[11px] font-semibold px-2.5 py-0.5 rounded border ${
+                        item.impactLevel === "Crítico"
+                          ? "bg-red-500/10 text-red-300 border-red-500/30"
+                          : "bg-amber-500/10 text-amber-300 border-amber-500/30"
+                      }`}>
+                        {item.impactLevel}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};

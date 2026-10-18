@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --color-gold-50: #fcf9f2;
+  --color-gold-100: #f8f1de;
+  --color-gold-200: #f1dfb8;
+  --color-gold-300: #e7ca8b;
+  --color-gold-400: #ddb25e;
+  --color-gold-500: #d4af37;
+  --color-gold-600: #b89029;
+  --color-gold-700: #936e22;
+  --color-gold-800: #785721;
+  --color-gold-900: #64461f;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+/* Custom Gold Foil Text Gradient & Shimmers */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #fcedc5 0%, #d4af37 50%, #aa8420 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gold-subtle {
+  background: linear-gradient(135deg, #ffffff 30%, #e2c275 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.border-gold-subtle {
+  border-color: rgba(212, 175, 55, 0.22);
+}
+
+.border-gold-glow {
+  border-color: rgba(212, 175, 55, 0.45);
+  box-shadow: 0 0 25px -5px rgba(212, 175, 55, 0.15);
+}
+
+.bg-gold-glass {
+  background: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.08) 0%, rgba(10, 10, 10, 0.8) 100%);
+}
+
+/* Custom scrollbar for tables */
+::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #09090b;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #d4af37;
+}
