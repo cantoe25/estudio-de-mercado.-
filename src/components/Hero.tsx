@@ -19,21 +19,15 @@ export const Hero: React.FC<HeroProps> = ({ onExploreGartner, onExploreScoring }
         <div className="flex flex-col items-center text-center max-w-5xl 2xl:max-w-6xl mx-auto">
 
           {/* Main Title with responsive sizing */}
-          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-serif font-bold text-white tracking-tight leading-[1.2] mb-4 text-balance text-center">
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-serif font-bold text-white tracking-tight leading-[1.2] mb-6 sm:mb-8 text-balance text-center">
             Estudio de Mercado: Calzado no deportivo, marcas de moda y lujo en Panamá
           </h1>
 
-          {/* Subtitle */}
-          <p className="text-sm sm:text-base lg:text-lg text-neutral-300 font-light leading-relaxed mb-8 max-w-3xl text-center">
-            Estimaciones cualitativas y precios de referencia en USD. Análisis de 8 marcas globales, 
-            scoring ponderado multicriterio y detección de la brecha desatendida entre el calzado aspiracional y el ultralujo.
-          </p>
-
           {/* Action Anchors */}
-          <div className="flex flex-col xs:flex-row items-stretch xs:items-center justify-center gap-3 w-full xs:w-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full mx-auto">
             <button
               onClick={onExploreGartner}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-semibold tracking-wider uppercase text-black bg-gradient-to-r from-amber-300 to-amber-500 hover:from-amber-200 hover:to-amber-400 rounded transition-all duration-500 ease-out shadow-md shadow-amber-500/15 hover:-translate-y-0.5 active:translate-y-0.5 active:scale-[0.98] min-h-[42px] cursor-pointer"
+              className="w-[500px] max-w-full mx-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-semibold tracking-wider uppercase text-black bg-gradient-to-r from-amber-300 to-amber-500 hover:from-amber-200 hover:to-amber-400 rounded transition-all duration-500 ease-out shadow-md shadow-amber-500/15 hover:-translate-y-0.5 active:translate-y-0.5 active:scale-[0.98] min-h-[42px] cursor-pointer"
             >
               <span>Ver Cuadrante Gartner</span>
               <ArrowRight className="w-3.5 h-3.5 shrink-0" />
@@ -41,7 +35,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreGartner, onExploreScoring }
 
             <button
               onClick={onExploreScoring}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-semibold tracking-wider uppercase text-amber-200 bg-neutral-900/80 hover:bg-neutral-800 border border-amber-500/30 hover:border-amber-400/60 rounded transition-all duration-500 ease-out hover:-translate-y-0.5 active:translate-y-0.5 active:scale-[0.98] min-h-[42px] cursor-pointer"
+              className="w-[500px] max-w-full mx-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-semibold tracking-wider uppercase text-amber-200 bg-neutral-900/80 hover:bg-neutral-800 border border-amber-500/30 hover:border-amber-400/60 rounded transition-all duration-500 ease-out hover:-translate-y-0.5 active:translate-y-0.5 active:scale-[0.98] min-h-[42px] cursor-pointer"
             >
               <span>Ver Matriz de Scoring</span>
             </button>
