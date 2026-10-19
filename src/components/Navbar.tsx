@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Menu, X, PieChart, Users, BarChart3, Compass, Lightbulb, ChevronRight, FileText, Download, Loader2 } from 'lucide-react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { X, Download, Loader2 } from 'lucide-react';
+import { smoothScrollToTop } from '../utils/scrollHelper';
 
 export type SectionKey = 'resumen' | 'competidores' | 'scoring' | 'cuadrante' | 'recomendaciones' | 'todos';
 
@@ -17,49 +18,70 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSelectSection,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
+  const [indicatorStyle, setIndicatorStyle] = useState<{ left: number; width: number; opacity: number }>({
+    left: 0,
+    width: 0,
+    opacity: 0,
+  });
 
   const menuItems = [
     {
       id: 'resumen' as SectionKey,
       num: '01',
       label: 'Resumen Ejecutivo',
-      subtitle: 'Vista principal, KPIs macro y brecha de mercado',
-      icon: PieChart,
     },
     {
       id: 'competidores' as SectionKey,
       num: '02',
       label: 'Landscape Competitivo',
-      subtitle: '8 marcas, origen, retail USD y presencia',
-      icon: Users,
     },
     {
       id: 'scoring' as SectionKey,
       num: '03',
       label: 'Matriz de Scoring',
-      subtitle: 'Evaluación ponderada multicriterio (1–10)',
-      icon: BarChart3,
     },
     {
       id: 'cuadrante' as SectionKey,
       num: '04',
       label: 'Cuadrante Estilo Gartner',
-      subtitle: 'Visión vs. Ejecución y nichos de mercado',
-      icon: Compass,
     },
     {
       id: 'recomendaciones' as SectionKey,
       num: '05',
       label: 'Recomendaciones y Riesgos',
-      subtitle: '8 mandamientos y planes de mitigación',
-      icon: Lightbulb,
     },
   ];
+
+  // Update position of the slow, fluid sliding indicator under the active button
+  const updateIndicator = useCallback(() => {
+    if (!navRef.current) return;
+    const activeButton = navRef.current.querySelector<HTMLButtonElement>(`[data-section="${activeSection}"]`);
+    if (activeButton) {
+      setIndicatorStyle({
+        left: activeButton.offsetLeft,
+        width: activeButton.offsetWidth,
+        opacity: 1,
+      });
+    } else {
+      setIndicatorStyle((prev) => ({ ...prev, opacity: 0 }));
+    }
+  }, [activeSection]);
+
+  useEffect(() => {
+    updateIndicator();
+    const timer = setTimeout(updateIndicator, 60);
+    window.addEventListener('resize', updateIndicator);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', updateIndicator);
+    };
+  }, [updateIndicator]);
 
   const handleSelect = (key: SectionKey) => {
     onSelectSection(key);
     setIsMobileMenuOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    smoothScrollToTop(850);
   };
 
   const handlePdfClick = () => {
@@ -75,40 +97,45 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Brand Zone */}
           <button 
             onClick={() => handleSelect('resumen')}
-            className="font-serif text-lg sm:text-xl tracking-wider text-white hover:text-amber-300 transition-colors whitespace-nowrap shrink-0 flex items-center gap-2 text-left"
+            className="font-serif text-lg sm:text-xl tracking-wider text-white hover:text-amber-300 transition-all duration-500 ease-out hover:-translate-y-0.5 active:translate-y-0.5 whitespace-nowrap shrink-0 flex items-center gap-2 text-left"
           >
             <span className="text-amber-400 font-bold text-xl sm:text-2xl font-serif">P</span>
             <span className="tracking-widest text-xs sm:text-sm uppercase font-sans font-semibold text-amber-100">
-              PANAMÁ <span className="text-amber-400/80 font-serif italic text-[11px] sm:text-xs">Footwear Study</span>
+              PANAMÁ <span className="text-amber-400/80 font-serif italic text-[11px] sm:text-xs">Nexo Lite</span>
             </span>
           </button>
 
-          {/* Desktop Nav Links (Visible on desktop >= md) */}
-          <nav className="hidden md:flex items-center gap-6 text-xs uppercase tracking-widest font-sans font-medium text-neutral-400">
+          {/* Desktop Nav Links with Slow, Fluid Sliding Indicator */}
+          <nav 
+            ref={navRef}
+            className="relative hidden md:flex items-center gap-6 text-xs uppercase tracking-widest font-sans font-medium text-neutral-400 py-1"
+          >
             {menuItems.map((item) => (
               <button
                 key={item.id}
+                data-section={item.id}
                 onClick={() => handleSelect(item.id)}
-                className={`transition-colors whitespace-nowrap shrink-0 ${
+                className={`relative py-1.5 px-0.5 transition-all duration-500 ease-out whitespace-nowrap shrink-0 hover:-translate-y-0.5 active:translate-y-0.5 cursor-pointer ${
                   activeSection === item.id
-                    ? 'text-amber-300 font-semibold border-b-2 border-amber-400 pb-0.5'
-                    : 'hover:text-amber-400'
+                    ? 'text-amber-300 font-semibold drop-shadow-[0_0_10px_rgba(251,191,36,0.45)]'
+                    : 'hover:text-amber-300 text-neutral-400'
                 }`}
               >
                 {item.label}
               </button>
             ))}
-            <button
-              onClick={() => handleSelect('todos')}
-              className={`transition-colors whitespace-nowrap shrink-0 ${
-                activeSection === 'todos'
-                  ? 'text-amber-300 font-semibold border-b-2 border-amber-400 pb-0.5'
-                  : 'hover:text-amber-400 text-neutral-500'
-              }`}
-            >
-              Ver Todo
-            </button>
+
+            {/* Gliding Amber Indicator Bar: Moves slowly and fluidly across the navbar */}
+            <span
+              className="absolute bottom-0 h-[2.5px] bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 rounded-full shadow-[0_0_12px_rgba(251,191,36,0.8)] pointer-events-none transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+              style={{
+                left: `${indicatorStyle.left}px`,
+                width: `${indicatorStyle.width}px`,
+                opacity: indicatorStyle.opacity,
+              }}
+            />
           </nav>
+
 
           {/* Right Action Cluster */}
           <div className="flex items-center gap-2 shrink-0">
@@ -116,7 +143,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={handlePdfClick}
               disabled={isGeneratingPdf}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs font-medium tracking-wider text-amber-300 bg-neutral-900 border border-amber-500/40 hover:bg-neutral-800 hover:border-amber-400 rounded transition-all active:scale-95 whitespace-nowrap min-h-[38px] disabled:opacity-60"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs font-medium tracking-wider text-amber-300 bg-neutral-900 border border-amber-500/40 hover:bg-neutral-800 hover:border-amber-400 rounded transition-all duration-500 ease-out hover:-translate-y-0.5 active:translate-y-0.5 active:scale-[0.98] whitespace-nowrap min-h-[38px] disabled:opacity-60 cursor-pointer"
               title="Descargar informe completo en PDF"
             >
               {isGeneratingPdf ? (
@@ -136,7 +163,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Mobile Three-Lines Hamburger Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-              className="md:hidden flex items-center justify-center p-2 rounded-lg bg-neutral-900 border border-amber-500/40 text-amber-300 hover:text-white hover:bg-neutral-800 transition-colors min-h-[44px] min-w-[44px]"
+              className="md:hidden flex items-center justify-center p-2 rounded-lg bg-neutral-900 border border-amber-500/40 text-amber-300 hover:text-white hover:bg-neutral-800 transition-all duration-500 ease-out hover:-translate-y-0.5 active:translate-y-0.5 min-h-[44px] min-w-[44px] cursor-pointer"
               aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir opciones de visualización"}
             >
               {isMobileMenuOpen ? (
@@ -166,9 +193,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={(e) => e.stopPropagation()}
           >
             <div>
-              <span className="text-[10px] uppercase tracking-widest text-amber-400 font-semibold block">
-                MENÚ DE VISUALIZACIÓN
-              </span>
               <h3 className="font-serif text-lg font-bold text-white">
                 Opciones del Estudio
               </h3>
@@ -187,107 +211,25 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="flex-1 overflow-y-auto p-4 space-y-2.5"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Direct PDF Export Button inside drawer */}
-            <div className="bg-gradient-to-r from-amber-500/20 to-neutral-900 border border-amber-400/50 rounded-xl p-3.5 mb-3">
-              <div className="flex items-center justify-between gap-2 mb-1.5">
-                <span className="text-[10px] uppercase tracking-widest text-amber-300 font-bold flex items-center gap-1.5">
-                  <Download className="w-3.5 h-3.5" />
-                  EXPORTAR REPORTE COMPLETO
-                </span>
-                <span className="text-[9px] bg-amber-400 text-black font-bold px-1.5 py-0.5 rounded">PDF</span>
-              </div>
-              <p className="text-xs text-neutral-300 mb-2.5">
-                Genera y descarga directamente un archivo PDF con las 5 partes completas del estudio.
-              </p>
-              <button
-                onClick={handlePdfClick}
-                disabled={isGeneratingPdf}
-                className="w-full py-2.5 px-3 rounded-lg text-xs font-bold uppercase tracking-wider text-black bg-gradient-to-r from-amber-300 to-amber-500 hover:from-amber-200 hover:to-amber-400 flex items-center justify-center gap-2 shadow-md shadow-amber-500/20 active:scale-95 disabled:opacity-60"
-              >
-                {isGeneratingPdf ? (
-                  <>
-                    <Loader2 className="w-4 h-4 text-black animate-spin" />
-                    <span>Generando PDF...</span>
-                  </>
-                ) : (
-                  <>
-                    <Download className="w-4 h-4 text-black" />
-                    <span>Descargar PDF Completo</span>
-                  </>
-                )}
-              </button>
-            </div>
-
-            <div className="text-[11px] uppercase tracking-widest text-neutral-400 font-semibold mb-2 px-1">
-              Partes del Estudio
-            </div>
-
             {menuItems.map((item) => {
-              const Icon = item.icon;
               const isSelected = activeSection === item.id;
               return (
                 <button
                   key={item.id}
                   onClick={() => handleSelect(item.id)}
-                  className={`w-full flex items-center justify-between p-3.5 rounded-lg border transition-all text-left ${
+                  className={`w-full flex items-center px-4 py-3.5 rounded-lg border transition-all duration-500 ease-out hover:-translate-y-0.5 active:translate-y-0.5 text-left cursor-pointer ${
                     isSelected
-                      ? 'bg-amber-500/15 border-amber-400 text-white shadow-lg shadow-amber-500/10'
+                      ? 'bg-amber-500/15 border-amber-400 text-white shadow-lg shadow-amber-500/10 font-semibold'
                       : 'bg-neutral-900/80 border-neutral-800 text-neutral-300 hover:bg-neutral-800 hover:text-white'
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-md ${
-                      isSelected ? 'bg-amber-400 text-black' : 'bg-neutral-800 text-amber-400'
-                    }`}>
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-serif text-sm font-bold">
-                          {item.label}
-                        </span>
-                        {item.id === 'resumen' && (
-                          <span className="text-[9px] uppercase tracking-wider font-semibold text-black bg-amber-400 px-1.5 py-0.2 rounded">
-                            Principal
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-[11px] text-neutral-400 mt-0.5 line-clamp-1">
-                        {item.subtitle}
-                      </p>
-                    </div>
-                  </div>
-                  <ChevronRight className={`w-4 h-4 shrink-0 ${
-                    isSelected ? 'text-amber-400' : 'text-neutral-600'
-                  }`} />
+                  <span className="font-serif text-sm">
+                    {item.label}
+                  </span>
                 </button>
               );
             })}
 
-            {/* Option to view all sections continuously */}
-            <button
-              onClick={() => handleSelect('todos')}
-              className={`w-full flex items-center justify-between p-3.5 rounded-lg border transition-all text-left mt-1 ${
-                activeSection === 'todos'
-                  ? 'bg-amber-500/15 border-amber-400 text-white'
-                  : 'bg-neutral-950 border-neutral-850 text-neutral-400 hover:bg-neutral-900'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-md bg-neutral-800 text-amber-400">
-                  <FileText className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="font-serif text-sm font-bold text-neutral-200">
-                    Ver Estudio Completo
-                  </span>
-                  <p className="text-[11px] text-neutral-500">
-                    Todas las secciones seguidas en un solo documento
-                  </p>
-                </div>
-              </div>
-              <ChevronRight className="w-4 h-4 text-neutral-600 shrink-0" />
-            </button>
           </div>
         </div>
       )}

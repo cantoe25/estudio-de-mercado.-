@@ -1,6 +1,5 @@
 import React from 'react';
 import { EXECUTIVE_INSIGHTS } from '../data/marketData';
-import { Target, TrendingUp, Gem, DollarSign } from 'lucide-react';
 
 export const ExecutiveSummary: React.FC = () => {
   return (
@@ -22,9 +21,8 @@ export const ExecutiveSummary: React.FC = () => {
         {/* 4 Core KPIs in 2x2 Mobile / 4-Col Desktop Grid with Golden Borders */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 2xl:gap-6 mb-8 sm:mb-10">
           <div className="bg-neutral-900/90 border border-amber-500/30 rounded-lg p-4 sm:p-6 relative overflow-hidden group hover:border-amber-400/60 transition-colors">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-neutral-400 font-medium truncate">Brecha de Mercado</span>
-              <Target className="w-4 h-4 text-amber-400 shrink-0" />
+            <div className="mb-2">
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-neutral-400 font-medium truncate block">Brecha de Mercado</span>
             </div>
             <div className="font-serif text-xl sm:text-3xl 2xl:text-4xl font-bold text-amber-300 tabular-nums">
               $250–$500
@@ -35,9 +33,8 @@ export const ExecutiveSummary: React.FC = () => {
           </div>
 
           <div className="bg-neutral-900/90 border border-amber-500/30 rounded-lg p-4 sm:p-6 relative overflow-hidden group hover:border-amber-400/60 transition-colors">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-neutral-400 font-medium truncate">Marcas Analizadas</span>
-              <Gem className="w-4 h-4 text-amber-400 shrink-0" />
+            <div className="mb-2">
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-neutral-400 font-medium truncate block">Marcas Analizadas</span>
             </div>
             <div className="font-serif text-xl sm:text-3xl 2xl:text-4xl font-bold text-white tabular-nums">
               8
@@ -48,9 +45,8 @@ export const ExecutiveSummary: React.FC = () => {
           </div>
 
           <div className="bg-neutral-900/90 border border-amber-500/30 rounded-lg p-4 sm:p-6 relative overflow-hidden group hover:border-amber-400/60 transition-colors">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-neutral-400 font-medium truncate">Segmentos Activos</span>
-              <TrendingUp className="w-4 h-4 text-amber-400 shrink-0" />
+            <div className="mb-2">
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-neutral-400 font-medium truncate block">Segmentos Activos</span>
             </div>
             <div className="font-serif text-xl sm:text-3xl 2xl:text-4xl font-bold text-white tabular-nums">
               3
@@ -61,9 +57,8 @@ export const ExecutiveSummary: React.FC = () => {
           </div>
 
           <div className="bg-neutral-900/90 border border-amber-500/30 rounded-lg p-4 sm:p-6 relative overflow-hidden group hover:border-amber-400/60 transition-colors">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-neutral-400 font-medium truncate">Impuesto ITBMS</span>
-              <DollarSign className="w-4 h-4 text-amber-400 shrink-0" />
+            <div className="mb-2">
+              <span className="text-[10px] sm:text-xs uppercase tracking-wider text-neutral-400 font-medium truncate block">Impuesto ITBMS</span>
             </div>
             <div className="font-serif text-xl sm:text-3xl 2xl:text-4xl font-bold text-amber-300 tabular-nums">
               7% ITBMS
@@ -87,17 +82,12 @@ export const ExecutiveSummary: React.FC = () => {
                     : "bg-neutral-950/80 border border-neutral-800 hover:border-neutral-700"
                 }`}
               >
-                <div className="flex items-center justify-between mb-2 sm:mb-3">
+                <div className="mb-2 sm:mb-3">
                   <h3 className={`font-serif font-semibold tracking-wide ${
                     isHighlighted ? "text-amber-300 text-base sm:text-lg" : "text-white text-sm sm:text-base"
                   }`}>
                     {item.title}
                   </h3>
-                  {isHighlighted && (
-                    <span className="text-[9px] sm:text-[10px] tracking-widest uppercase font-semibold text-black bg-amber-400 px-2 py-0.5 rounded whitespace-nowrap">
-                      Oportunidad Clave
-                    </span>
-                  )}
                 </div>
                 <p className={`text-xs sm:text-sm leading-relaxed ${
                   isHighlighted ? "text-neutral-200 font-normal" : "text-neutral-400"

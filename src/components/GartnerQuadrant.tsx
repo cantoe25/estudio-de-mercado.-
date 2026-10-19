@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { BrandData } from '../data/marketData';
-import { Sparkles, Info } from 'lucide-react';
 
 interface GartnerQuadrantProps {
   brands: BrandData[];
@@ -77,9 +76,6 @@ export const GartnerQuadrant: React.FC<GartnerQuadrantProps> = ({
               </h2>
               <div className="w-14 sm:w-16 h-0.5 bg-gradient-to-r from-amber-400 to-transparent mt-2"></div>
             </div>
-            <p className="text-xs text-neutral-400 max-w-md">
-              Capacidad de Ejecución en retail y logística panameña vs. Completitud de Visión de producto.
-            </p>
           </div>
         </div>
 
@@ -89,9 +85,9 @@ export const GartnerQuadrant: React.FC<GartnerQuadrantProps> = ({
             <button
               key={c.key}
               onClick={() => setActiveCategoryFilter(prev => prev === c.key ? "Todos" : c.key)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs transition-colors shrink-0 min-h-[38px] ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs transition-all duration-500 ease-out hover:-translate-y-0.5 active:translate-y-0.5 shrink-0 min-h-[38px] cursor-pointer ${
                 activeCategoryFilter === c.key
-                  ? "bg-neutral-800 text-white font-semibold ring-1 ring-amber-400"
+                  ? "bg-neutral-800 text-white font-semibold ring-1 ring-amber-400 shadow-md shadow-amber-400/10"
                   : "bg-neutral-900/80 text-neutral-400 hover:text-white border border-neutral-800"
               }`}
             >
@@ -102,7 +98,7 @@ export const GartnerQuadrant: React.FC<GartnerQuadrantProps> = ({
           {activeCategoryFilter !== "Todos" && (
             <button
               onClick={() => setActiveCategoryFilter("Todos")}
-              className="text-[11px] text-amber-400 hover:text-amber-300 transition-colors whitespace-nowrap px-2"
+              className="text-[11px] text-amber-400 hover:text-amber-300 transition-all duration-500 ease-out hover:-translate-y-0.5 active:translate-y-0.5 whitespace-nowrap px-2 cursor-pointer"
             >
               Ver todos
             </button>
@@ -418,18 +414,6 @@ export const GartnerQuadrant: React.FC<GartnerQuadrantProps> = ({
           })}
         </div>
 
-        {/* Opportunity Takeaway Box */}
-        <div className="flex items-start gap-2.5 sm:gap-3 mt-4 sm:mt-6 p-4 sm:p-5 rounded bg-gradient-to-r from-neutral-900 via-neutral-950 to-neutral-900 border border-amber-500/40 text-xs">
-          <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 shrink-0 mt-0.5" />
-          <div>
-            <div className="font-serif text-xs sm:text-sm font-bold text-amber-300 mb-1">
-              Conclusión del Cuadrante
-            </div>
-            <p className="text-[11px] sm:text-xs text-neutral-300 leading-relaxed">
-              Ninguna marca existente en Panamá combina actualmente una <strong>alta capacidad de ejecución local</strong> (entrega express 24-48h, atención presencial y cambio de talla) con una <strong>propuesta de calzado artesanal premium ($250–$500) y adaptada al clima húmedo</strong>. Es el espacio libre ideal para una nueva firma.
-            </p>
-          </div>
-        </div>
       </div>
     </section>
   );

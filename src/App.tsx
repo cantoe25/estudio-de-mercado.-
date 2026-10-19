@@ -16,7 +16,8 @@ import { Footer } from './components/Footer';
 import { BrandDetailModal } from './components/BrandDetailModal';
 import { PrintReportView } from './components/PrintReportView';
 import { generateMarketStudyPdf } from './utils/generatePdf';
-import { ArrowLeft, ArrowRight, ChevronRight, Download, FileText, Loader2 } from 'lucide-react';
+import { smoothScrollToTop } from './utils/scrollHelper';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 export default function App() {
   const [brands] = useState<BrandData[]>(INITIAL_BRANDS);
@@ -37,7 +38,7 @@ export default function App() {
 
   const handleSelectSection = (key: SectionKey) => {
     setActiveSection(key);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    smoothScrollToTop(850);
   };
 
   const handleDownloadPdf = async () => {
@@ -57,22 +58,6 @@ export default function App() {
     }
   };
 
-  const getSectionTitle = (key: SectionKey) => {
-    switch (key) {
-      case 'resumen':
-        return '1. Resumen Ejecutivo';
-      case 'competidores':
-        return '2. Landscape Competitivo';
-      case 'scoring':
-        return '3. Matriz de Scoring Ponderado';
-      case 'cuadrante':
-        return '4. Cuadrante Estilo Gartner';
-      case 'recomendaciones':
-        return '5. Recomendaciones Estratégicas y Riesgos';
-      case 'todos':
-        return 'Estudio Completo (Todas las secciones)';
-    }
-  };
 
   return (
     <>
@@ -91,265 +76,132 @@ export default function App() {
 
         {/* Main Content Area */}
         <main className="flex-1">
-          {/* Curatorial Hero Banner */}
-          <Hero
-            onExploreGartner={() => handleSelectSection('cuadrante')}
-            onExploreScoring={() => handleSelectSection('scoring')}
-          />
+          {/* Keyed container so every section switch triggers a slow, fluid, graceful entrance */}
+          <div key={activeSection} className="animate-fluid-view">
+            {/* Curatorial Hero Banner - visible only in Resumen Ejecutivo or Ver Todo */}
+            {(activeSection === 'resumen' || activeSection === 'todos') && (
+              <Hero
+                onExploreGartner={() => handleSelectSection('cuadrante')}
+                onExploreScoring={() => handleSelectSection('scoring')}
+              />
+            )}
 
-          {/* Section Navigation Banner for Mobile (indicates current view and back button) */}
-          {activeSection !== 'resumen' && (
-            <div className="bg-neutral-900/90 border-b border-amber-500/30 px-4 py-2.5 flex items-center justify-between text-xs sticky top-14 z-30 backdrop-blur-md">
-              <button
-                onClick={() => handleSelectSection('resumen')}
-                className="inline-flex items-center gap-1.5 text-amber-300 hover:text-white font-medium py-1 px-2 rounded hover:bg-neutral-800 transition-colors"
-              >
-                <ArrowLeft className="w-3.5 h-3.5 text-amber-400" />
-                <span>Volver al Resumen Principal</span>
-              </button>
-
-              <span className="text-[11px] text-neutral-400 font-serif italic truncate max-w-[180px]">
-                {getSectionTitle(activeSection)}
-              </span>
-            </div>
-          )}
-
-          {/* 1. Resumen Ejecutivo (Shown when 'resumen' or 'todos') */}
-          {(activeSection === 'resumen' || activeSection === 'todos') && (
-            <div>
+            {/* 1. Resumen Ejecutivo (Shown when 'resumen' or 'todos') */}
+            {(activeSection === 'resumen' || activeSection === 'todos') && (
               <ExecutiveSummary />
+            )}
 
-              {/* Quick Navigation Cards on Mobile at the end of Executive Summary */}
-              {activeSection === 'resumen' && (
-                <section className="py-8 border-b border-amber-500/20 bg-neutral-950">
-                  <div className="w-full max-w-[1800px] mx-auto px-4 sm:px-6">
-                    <div className="bg-neutral-900/90 border border-amber-500/40 rounded-xl p-5 shadow-2xl">
-                      <div className="flex items-center justify-between gap-2 mb-3">
-                        <div>
-                          <span className="text-[10px] uppercase tracking-widest text-amber-400 font-semibold block">
-                            EXPLORAR MÁS SECCIONES
-                          </span>
-                          <h3 className="font-serif text-lg font-bold text-white">
-                            Opciones de Visualización Disponibles
-                          </h3>
-                        </div>
-                        <span className="hidden sm:inline-block text-xs text-neutral-400">
-                          O usa el menú de tres líneas (☰)
-                        </span>
-                      </div>
-
-                      <p className="text-xs text-neutral-300 mb-4 leading-relaxed">
-                        El informe completo cuenta con datos detallados de cada competidor, la matriz interactiva de puntuación, el cuadrante Gartner y recomendaciones de mitigación de riesgo:
-                      </p>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                        <button
-                          onClick={() => handleSelectSection('competidores')}
-                          className="flex items-center justify-between p-3 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-amber-400/50 text-left transition-colors group min-h-[44px]"
-                        >
-                          <div>
-                            <span className="font-serif text-xs font-bold text-white group-hover:text-amber-300 block">
-                              2. Landscape Competitivo
-                            </span>
-                            <span className="text-[11px] text-neutral-400">
-                              8 marcas: BOSS, Gucci, Zegna, Tod&apos;s, etc.
-                            </span>
-                          </div>
-                          <ChevronRight className="w-4 h-4 text-neutral-500 group-hover:text-amber-400 shrink-0" />
-                        </button>
-
-                        <button
-                          onClick={() => handleSelectSection('scoring')}
-                          className="flex items-center justify-between p-3 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-amber-400/50 text-left transition-colors group min-h-[44px]"
-                        >
-                          <div>
-                            <span className="font-serif text-xs font-bold text-white group-hover:text-amber-300 block">
-                              3. Matriz de Scoring Ponderado
-                            </span>
-                            <span className="text-[11px] text-neutral-400">
-                              Calidad, marca, valor, acceso e innovación
-                            </span>
-                          </div>
-                          <ChevronRight className="w-4 h-4 text-neutral-500 group-hover:text-amber-400 shrink-0" />
-                        </button>
-
-                        <button
-                          onClick={() => handleSelectSection('cuadrante')}
-                          className="flex items-center justify-between p-3 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-amber-400/50 text-left transition-colors group min-h-[44px]"
-                        >
-                          <div>
-                            <span className="font-serif text-xs font-bold text-white group-hover:text-amber-300 block">
-                              4. Cuadrante Estilo Gartner
-                            </span>
-                            <span className="text-[11px] text-neutral-400">
-                              Líderes, retadores, visionarios y nicho
-                            </span>
-                          </div>
-                          <ChevronRight className="w-4 h-4 text-neutral-500 group-hover:text-amber-400 shrink-0" />
-                        </button>
-
-                        <button
-                          onClick={() => handleSelectSection('recomendaciones')}
-                          className="flex items-center justify-between p-3 rounded-lg bg-neutral-950 border border-neutral-800 hover:border-amber-400/50 text-left transition-colors group min-h-[44px]"
-                        >
-                          <div>
-                            <span className="font-serif text-xs font-bold text-white group-hover:text-amber-300 block">
-                              5. Recomendaciones Estratégicas
-                            </span>
-                            <span className="text-[11px] text-neutral-400">
-                              8 mandamientos y tabla de riesgos
-                            </span>
-                          </div>
-                          <ChevronRight className="w-4 h-4 text-neutral-500 group-hover:text-amber-400 shrink-0" />
-                        </button>
-                      </div>
-
-                      {/* PDF Export Banner inside section */}
-                      <div className="mt-4 pt-4 border-t border-neutral-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-                        <button
-                          onClick={handleDownloadPdf}
-                          disabled={isGeneratingPdf}
-                          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-black bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500 rounded hover:from-amber-200 hover:to-amber-400 transition-all shadow-md shadow-amber-500/20 active:scale-95 min-h-[42px] disabled:opacity-60"
-                        >
-                          {isGeneratingPdf ? (
-                            <>
-                              <Loader2 className="w-4 h-4 text-black animate-spin" />
-                              <span>Generando PDF...</span>
-                            </>
-                          ) : (
-                            <>
-                              <Download className="w-4 h-4 text-black" />
-                              <span>Descargar Todo el Estudio en PDF</span>
-                            </>
-                          )}
-                        </button>
-
-                        <div className="flex items-center justify-end gap-3 text-xs">
-                          <button
-                            onClick={() => handleSelectSection('todos')}
-                            className="text-neutral-400 hover:text-amber-300 underline py-1"
-                          >
-                            Ver todo el estudio continuo
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+            {/* 2. Landscape Competitivo (Shown when 'competidores' or 'todos') */}
+            {(activeSection === 'competidores' || activeSection === 'todos') && (
+              <div>
+                <LandscapeSection
+                  brands={brands}
+                  onSelectBrand={(brand) => setSelectedBrand(brand)}
+                />
+                {activeSection === 'competidores' && (
+                  <div className="py-6 px-4 w-full max-w-[1800px] mx-auto flex items-center justify-between gap-2 border-b border-neutral-800">
+                    <button
+                      onClick={() => handleSelectSection('resumen')}
+                      className="inline-flex items-center gap-1.5 text-xs text-neutral-400 hover:text-amber-300 min-h-[38px] transition-all duration-500 ease-out hover:-translate-y-0.5 active:translate-y-0.5 cursor-pointer"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      <span>1. Resumen</span>
+                    </button>
+                    <button
+                      onClick={() => handleSelectSection('scoring')}
+                      className="inline-flex items-center gap-1.5 text-xs text-amber-300 hover:text-white font-medium bg-neutral-900 border border-neutral-800 px-3.5 py-1.5 rounded min-h-[38px] transition-all duration-500 ease-out hover:-translate-y-0.5 hover:border-amber-400/40 active:translate-y-0.5 shadow-sm hover:shadow-amber-500/10 cursor-pointer"
+                    >
+                      <span>Siguiente: 3. Scoring</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
                   </div>
-                </section>
-              )}
-            </div>
-          )}
+                )}
+              </div>
+            )}
 
-          {/* 2. Landscape Competitivo (Shown when 'competidores' or 'todos') */}
-          {(activeSection === 'competidores' || activeSection === 'todos') && (
-            <div>
-              <LandscapeSection
-                brands={brands}
-                onSelectBrand={(brand) => setSelectedBrand(brand)}
-              />
-              {activeSection === 'competidores' && (
-                <div className="py-6 px-4 w-full max-w-[1800px] mx-auto flex items-center justify-between gap-2 border-b border-neutral-800">
-                  <button
-                    onClick={() => handleSelectSection('resumen')}
-                    className="inline-flex items-center gap-1.5 text-xs text-neutral-400 hover:text-amber-300 min-h-[38px]"
-                  >
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>1. Resumen</span>
-                  </button>
-                  <button
-                    onClick={() => handleSelectSection('scoring')}
-                    className="inline-flex items-center gap-1.5 text-xs text-amber-300 hover:text-white font-medium bg-neutral-900 border border-neutral-800 px-3 py-1.5 rounded min-h-[38px]"
-                  >
-                    <span>Siguiente: 3. Scoring</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
+            {/* 3. Matriz de Scoring Ponderado (Shown when 'scoring' or 'todos') */}
+            {(activeSection === 'scoring' || activeSection === 'todos') && (
+              <div>
+                <ScoringSection
+                  brands={brands}
+                  onSelectBrand={(brand) => setSelectedBrand(brand)}
+                />
+                {activeSection === 'scoring' && (
+                  <div className="py-6 px-4 w-full max-w-[1800px] mx-auto flex items-center justify-between gap-2 border-b border-neutral-800">
+                    <button
+                      onClick={() => handleSelectSection('competidores')}
+                      className="inline-flex items-center gap-1.5 text-xs text-neutral-400 hover:text-amber-300 min-h-[38px] transition-all duration-500 ease-out hover:-translate-y-0.5 active:translate-y-0.5 cursor-pointer"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      <span>2. Competidores</span>
+                    </button>
+                    <button
+                      onClick={() => handleSelectSection('cuadrante')}
+                      className="inline-flex items-center gap-1.5 text-xs text-amber-300 hover:text-white font-medium bg-neutral-900 border border-neutral-800 px-3.5 py-1.5 rounded min-h-[38px] transition-all duration-500 ease-out hover:-translate-y-0.5 hover:border-amber-400/40 active:translate-y-0.5 shadow-sm hover:shadow-amber-500/10 cursor-pointer"
+                    >
+                      <span>Siguiente: 4. Cuadrante</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
 
-          {/* 3. Matriz de Scoring Ponderado (Shown when 'scoring' or 'todos') */}
-          {(activeSection === 'scoring' || activeSection === 'todos') && (
-            <div>
-              <ScoringSection
-                brands={brands}
-                onSelectBrand={(brand) => setSelectedBrand(brand)}
-              />
-              {activeSection === 'scoring' && (
-                <div className="py-6 px-4 w-full max-w-[1800px] mx-auto flex items-center justify-between gap-2 border-b border-neutral-800">
-                  <button
-                    onClick={() => handleSelectSection('competidores')}
-                    className="inline-flex items-center gap-1.5 text-xs text-neutral-400 hover:text-amber-300 min-h-[38px]"
-                  >
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>2. Competidores</span>
-                  </button>
-                  <button
-                    onClick={() => handleSelectSection('cuadrante')}
-                    className="inline-flex items-center gap-1.5 text-xs text-amber-300 hover:text-white font-medium bg-neutral-900 border border-neutral-800 px-3 py-1.5 rounded min-h-[38px]"
-                  >
-                    <span>Siguiente: 4. Cuadrante</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
+            {/* 4. Cuadrante Estilo Gartner (Shown when 'cuadrante' or 'todos') */}
+            {(activeSection === 'cuadrante' || activeSection === 'todos') && (
+              <div>
+                <GartnerQuadrant
+                  brands={brands}
+                  selectedBrandId={selectedBrand?.id}
+                  onSelectBrand={(brand) => setSelectedBrand(brand)}
+                  simulatedBrand={simulatedBrand}
+                />
+                {activeSection === 'cuadrante' && (
+                  <div className="py-6 px-4 w-full max-w-[1800px] mx-auto flex items-center justify-between gap-2 border-b border-neutral-800">
+                    <button
+                      onClick={() => handleSelectSection('scoring')}
+                      className="inline-flex items-center gap-1.5 text-xs text-neutral-400 hover:text-amber-300 min-h-[38px] transition-all duration-500 ease-out hover:-translate-y-0.5 active:translate-y-0.5 cursor-pointer"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      <span>3. Scoring</span>
+                    </button>
+                    <button
+                      onClick={() => handleSelectSection('recomendaciones')}
+                      className="inline-flex items-center gap-1.5 text-xs text-amber-300 hover:text-white font-medium bg-neutral-900 border border-neutral-800 px-3.5 py-1.5 rounded min-h-[38px] transition-all duration-500 ease-out hover:-translate-y-0.5 hover:border-amber-400/40 active:translate-y-0.5 shadow-sm hover:shadow-amber-500/10 cursor-pointer"
+                    >
+                      <span>Siguiente: 5. Recomendaciones</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
 
-          {/* 4. Cuadrante Estilo Gartner (Shown when 'cuadrante' or 'todos') */}
-          {(activeSection === 'cuadrante' || activeSection === 'todos') && (
-            <div>
-              <GartnerQuadrant
-                brands={brands}
-                selectedBrandId={selectedBrand?.id}
-                onSelectBrand={(brand) => setSelectedBrand(brand)}
-                simulatedBrand={simulatedBrand}
-              />
-              {activeSection === 'cuadrante' && (
-                <div className="py-6 px-4 w-full max-w-[1800px] mx-auto flex items-center justify-between gap-2 border-b border-neutral-800">
-                  <button
-                    onClick={() => handleSelectSection('scoring')}
-                    className="inline-flex items-center gap-1.5 text-xs text-neutral-400 hover:text-amber-300 min-h-[38px]"
-                  >
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>3. Scoring</span>
-                  </button>
-                  <button
-                    onClick={() => handleSelectSection('recomendaciones')}
-                    className="inline-flex items-center gap-1.5 text-xs text-amber-300 hover:text-white font-medium bg-neutral-900 border border-neutral-800 px-3 py-1.5 rounded min-h-[38px]"
-                  >
-                    <span>Siguiente: 5. Recomendaciones</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* 5. Recomendaciones Estratégicas y Riesgos (Shown when 'recomendaciones' or 'todos') */}
-          {(activeSection === 'recomendaciones' || activeSection === 'todos') && (
-            <div>
-              <RecommendationsSection />
-              {activeSection === 'recomendaciones' && (
-                <div className="py-6 px-4 w-full max-w-[1800px] mx-auto flex items-center justify-between gap-2 border-b border-neutral-800">
-                  <button
-                    onClick={() => handleSelectSection('cuadrante')}
-                    className="inline-flex items-center gap-1.5 text-xs text-neutral-400 hover:text-amber-300 min-h-[38px]"
-                  >
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>4. Cuadrante</span>
-                  </button>
-                  <button
-                    onClick={() => handleSelectSection('resumen')}
-                    className="inline-flex items-center gap-1.5 text-xs text-amber-300 hover:text-white font-medium bg-neutral-900 border border-neutral-800 px-3 py-1.5 rounded min-h-[38px]"
-                  >
-                    <span>Volver al Resumen (Principal)</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
+            {/* 5. Recomendaciones Estratégicas y Riesgos (Shown when 'recomendaciones' or 'todos') */}
+            {(activeSection === 'recomendaciones' || activeSection === 'todos') && (
+              <div>
+                <RecommendationsSection />
+                {activeSection === 'recomendaciones' && (
+                  <div className="py-6 px-4 w-full max-w-[1800px] mx-auto flex items-center justify-between gap-2 border-b border-neutral-800">
+                    <button
+                      onClick={() => handleSelectSection('cuadrante')}
+                      className="inline-flex items-center gap-1.5 text-xs text-neutral-400 hover:text-amber-300 min-h-[38px] transition-all duration-500 ease-out hover:-translate-y-0.5 active:translate-y-0.5 cursor-pointer"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      <span>4. Cuadrante</span>
+                    </button>
+                    <button
+                      onClick={() => handleSelectSection('resumen')}
+                      className="inline-flex items-center gap-1.5 text-xs text-amber-300 hover:text-white font-medium bg-neutral-900 border border-neutral-800 px-3.5 py-1.5 rounded min-h-[38px] transition-all duration-500 ease-out hover:-translate-y-0.5 hover:border-amber-400/40 active:translate-y-0.5 shadow-sm hover:shadow-amber-500/10 cursor-pointer"
+                    >
+                      <span>Volver al Resumen (Principal)</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </main>
 
         {/* Institutional Footer */}

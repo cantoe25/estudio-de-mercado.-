@@ -1,6 +1,5 @@
 import React from 'react';
 import { STRATEGIC_RECOMMENDATIONS, RISKS_AND_MITIGATIONS } from '../data/marketData';
-import { CheckCircle2, AlertTriangle } from 'lucide-react';
 
 export const RecommendationsSection: React.FC = () => {
   return (
@@ -20,9 +19,6 @@ export const RecommendationsSection: React.FC = () => {
               </h2>
               <div className="w-14 sm:w-16 h-0.5 bg-gradient-to-r from-amber-400 to-transparent mt-2"></div>
             </div>
-            <p className="text-xs text-neutral-400 max-w-md">
-              8 mandamientos de ejecución comercial para penetrar y liderar la brecha de calzado premium en Ciudad de Panamá.
-            </p>
           </div>
         </div>
 
@@ -34,18 +30,10 @@ export const RecommendationsSection: React.FC = () => {
               className="bg-neutral-900/80 border border-neutral-800 hover:border-amber-500/40 rounded p-4 sm:p-6 transition-all duration-200 group flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-start justify-between gap-2 mb-2 sm:mb-3">
-                  <div className="flex items-baseline gap-2">
-                    <span className="font-serif text-2xl sm:text-3xl font-bold text-amber-400 tabular-nums">
-                      {String(rec.id).padStart(2, '0')}.
-                    </span>
-                    <h3 className="font-serif text-base sm:text-lg font-bold text-white group-hover:text-amber-200 transition-colors">
-                      {rec.title}
-                    </h3>
-                  </div>
-                  <span className="text-[9px] sm:text-[10px] tracking-wider uppercase font-semibold text-neutral-400 border border-neutral-700 px-2 py-0.5 rounded whitespace-nowrap">
-                    {rec.focusArea}
-                  </span>
+                <div className="mb-2 sm:mb-3 min-h-[2.8rem] sm:min-h-[3.2rem] flex flex-col justify-center">
+                  <h3 className="font-serif text-base sm:text-lg font-bold text-white group-hover:text-amber-200 transition-colors leading-snug text-balance">
+                    {rec.title}
+                  </h3>
                 </div>
 
                 {/* Acción */}
@@ -70,9 +58,8 @@ export const RecommendationsSection: React.FC = () => {
         <div className="mt-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-lg sm:text-xl font-serif font-bold text-white flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
-                <span>Riesgos del Mercado Panameño y Mitigación</span>
+              <h3 className="text-lg sm:text-xl font-serif font-bold text-white">
+                Riesgos del Mercado Panameño y Mitigación
               </h3>
               <p className="text-xs text-neutral-400 mt-1">
                 Estrategias preventivas contra barreras arancelarias, compras en Miami y gigantes del retail.
@@ -88,21 +75,13 @@ export const RecommendationsSection: React.FC = () => {
                   <span className="text-[10px] uppercase font-semibold text-neutral-400">
                     Riesgo #{idx + 1}
                   </span>
-                  <span className={`inline-block text-[10px] font-semibold px-2 py-0.5 rounded border ${
-                    item.impactLevel === "Crítico"
-                      ? "bg-red-500/10 text-red-300 border-red-500/30"
-                      : "bg-amber-500/10 text-amber-300 border-amber-500/30"
-                  }`}>
-                    {item.impactLevel}
-                  </span>
                 </div>
 
                 <p className="text-xs font-medium text-white mb-3 leading-relaxed">
                   {item.risk}
                 </p>
 
-                <div className="bg-neutral-900/80 p-2.5 rounded border border-neutral-800/80 flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                <div className="bg-neutral-900/80 p-2.5 rounded border border-neutral-800/80">
                   <div className="text-[11px] text-neutral-300 leading-relaxed">
                     <strong className="text-amber-300 block mb-0.5 uppercase tracking-wider text-[10px]">
                       Mitigación Operativa:
@@ -131,19 +110,10 @@ export const RecommendationsSection: React.FC = () => {
                       {item.risk}
                     </td>
                     <td className="py-4 px-5 text-neutral-300 align-top leading-relaxed">
-                      <div className="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                        <span>{item.mitigation}</span>
-                      </div>
+                      <span>{item.mitigation}</span>
                     </td>
-                    <td className="py-4 px-5 text-center align-top whitespace-nowrap">
-                      <span className={`inline-block text-[11px] font-semibold px-2.5 py-0.5 rounded border ${
-                        item.impactLevel === "Crítico"
-                          ? "bg-red-500/10 text-red-300 border-red-500/30"
-                          : "bg-amber-500/10 text-amber-300 border-amber-500/30"
-                      }`}>
-                        {item.impactLevel}
-                      </span>
+                    <td className="py-4 px-5 text-center align-top whitespace-nowrap text-neutral-300 font-sans">
+                      {item.impactLevel}
                     </td>
                   </tr>
                 ))}

@@ -165,7 +165,7 @@ export const BrandDetailModal: React.FC<BrandDetailModalProps> = ({ brand, onClo
         <div className="mt-4 pt-3 border-t border-neutral-800 flex justify-end pb-2 sm:pb-0">
           <button
             onClick={onClose}
-            className="w-full sm:w-auto px-5 py-2.5 text-xs uppercase font-semibold tracking-wider text-black bg-gradient-to-r from-amber-300 to-amber-500 hover:from-amber-200 hover:to-amber-400 rounded transition-colors min-h-[44px]"
+            className="w-full sm:w-auto px-5 py-2.5 text-xs uppercase font-semibold tracking-wider text-black bg-gradient-to-r from-amber-300 to-amber-500 hover:from-amber-200 hover:to-amber-400 rounded transition-all duration-500 ease-out hover:-translate-y-0.5 active:translate-y-0.5 shadow-md shadow-amber-500/15 min-h-[44px] cursor-pointer"
           >
             Cerrar Ficha
           </button>

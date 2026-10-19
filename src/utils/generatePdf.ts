@@ -31,7 +31,7 @@ export async function generateMarketStudyPdf(): Promise<void> {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8);
     doc.setTextColor(goldPrimary[0], goldPrimary[1], goldPrimary[2]);
-    doc.text('PANAMÁ FOOTWEAR INTELLIGENCE · INFORME ESTRATÉGICO', margin, 10);
+    doc.text('PANAMÁ NEXO LITE · INFORME ESTRATÉGICO', margin, 10);
 
     doc.setTextColor(textMuted[0], textMuted[1], textMuted[2]);
     doc.text(`Página ${pageNumber} de ${totalPages}`, pageWidth - margin, 10, { align: 'right' });
